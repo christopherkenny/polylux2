@@ -16,7 +16,7 @@ Note that the scaling is not proportional so the content might get distorted.
 Insert linebreaks to adjust how the result looks.
 
 In this more complex example, we have the same text scaled by `big` three times
-but we succesively adjust it using linebreaks and the leading height.
+but we successively adjust it using linebreaks and the leading height.
 
 ```typ
 {{#include big-complex.typ:5:25}}
