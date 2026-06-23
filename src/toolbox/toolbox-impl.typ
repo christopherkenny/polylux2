@@ -33,11 +33,13 @@
 // PROGRESS
 
 #let progress-ratio(ratio-to-content) = context {
-  let ratio = (
-    logic.logical-slide.get().first() /
-    logic.logical-slide.final().first()
-  )
-  ratio-to-content(ratio)
+  let last = logic.logical-slide.final().first()
+  if last > 0 {
+    let ratio = (
+      logic.logical-slide.get().first() / last
+    )
+    ratio-to-content(ratio)
+  }
 }
 
 #let last-slide-number = context { logic.logical-slide.final().first() }
