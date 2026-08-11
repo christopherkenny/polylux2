@@ -1,46 +1,13 @@
 [
   {
-    "objectID": "toolbox/next-heading.html",
-    "href": "toolbox/next-heading.html",
-    "title": "Find next heading",
+    "objectID": "external/external.html",
+    "href": "external/external.html",
+    "title": "External tools",
     "section": "",
-    "text": "Find next heading\nIt can be very convenient to specify something like slide titles using headings as they have a dedicated Typst syntax. While it might suffice to just style how a heading is displayed using a show rule, this is not feasible when the slide title is supposed to be part of the page header, for example.\nFor these situations, the toolbox provides #toolbox.next-heading. It takes a function mapping the body of the first heading on the same page (if it exists) to some content.\nThe intended use is as such:\n#set page(\n  paper: \"presentation-16-9\",\n  header: toolbox.next-heading(h =&gt; underline(h))\n)\n\n#show heading.where(level: 1): none\n\n#set align(horizon)\n\n#slide[\n  = My slide title\n\n  #lorem(10)\n]\n\n#slide[\n  slide without a title\n]\n\n#slide[\n  = Another title\n\n  #lorem(10)\n]\n\n\n\n\n\n\nnext-heading (subslide 1)\n\n\n\n\n\n\n\nnext-heading (subslide 2)\n\n\n\n\n\n\n\nnext-heading (subslide 3)\n\n\n\n\n\nNote the extra show rule for level-one headings making them invisible.\nYou can make #toolbox.next-heading look for headings of other levels as well, just specify the optional level argument that defaults to 1.",
+    "text": "External tools\nMost users will only come across Typst itself and some off-the-shelf PDF viewer. However, there are some additional tools that might come in handy and Polylux supports some of their special needs.\nSo far, this support is limited to the pdfpc presentation tool.",
     "crumbs": [
-      "Toolbox",
-      "Find next heading"
-    ]
-  },
-  {
-    "objectID": "toolbox/side-by-side.html",
-    "href": "toolbox/side-by-side.html",
-    "title": "Side by side",
-    "section": "",
-    "text": "Side by side\nTo make good use of the space on a slide, you will often want to place content next to each other. For convenience, toolbox provides the function #side-by-side for this purpose. It is basically a thin wrapper around the Typst function #grid but tailored towards this specific usecase. In its simplest form, you can use it as\n#toolbox.side-by-side[\n  #lorem(7)\n][\n  #lorem(10)\n][\n  #lorem(5)\n]\n\n\n\nside-by-side\n\n\nAs you can see, the content arguments you provide will be placed next to each other with equal proportions of width. A spacing (gutter) of 1em will also be put between them.\nThe widths and gutter can be configured using the columns and gutter optional arguments, respectively. They are propagated to #grid directly so you can look up possible values in its documentation (gutter and columns arguments). If not specified, they fall back to these defaults: - gutter: 1em - columns: (1fr,) * n if you provided n content arguments, that means an array with the value 1fr repeated n times.\nA more complex example would therefore be:\n#toolbox.side-by-side(gutter: 3mm, columns: (1fr, 2fr, 1fr))[\n  #rect(width: 100%, stroke: none, fill: aqua)\n][\n  #rect(width: 100%, stroke: none, fill: teal)\n][\n  #rect(width: 100%, stroke: none, fill: eastern)\n]\n\n\n\nside-by-side-kwargs",
-    "crumbs": [
-      "Toolbox",
-      "Side by side"
-    ]
-  },
-  {
-    "objectID": "toolbox/progress.html",
-    "href": "toolbox/progress.html",
-    "title": "How much longer? 🥱",
-    "section": "",
-    "text": "How much longer? 🥱\nThere are a handful of features that let you display the progress of the presentation.\nThe most simple one is directly displaying the current slide number. Remember that each slide might produce an arbitrary amount of subslides, i.e. PDF pages, so we cannot rely on the builtin page counter. Instead, there is #toolbox.slide-number to see what the current slide number is.\nIf you want to put that into relation to how many slides there are in total, you can also display #toolbox.last-slide-number.\nNote that both these things are content, though, so you can only display them and not calculate with the numbers. A common calculation you might want do to is finding their ratio, i.e. current slide number divided by total number of slides. To that end, you can use the function toolbox.progress. You can pass a function to it that turns the current ratio into some content. You might utilise this to display a little progress bar, for example:\n#let my-progress = {\n  [#toolbox.slide-number / #toolbox.last-slide-number]\n\n  toolbox.progress-ratio(ratio =&gt; {\n    stack(\n      dir: ltr,\n      rect(stroke: blue, fill: blue, width: ratio       * 8cm),\n      rect(stroke: blue, fill: none, width: (1 - ratio) * 8cm),\n    )\n  })\n}\n\n#set align(horizon)\n\n#for _ in range(6) {\n  slide[\n    #my-progress\n  ]\n}\n\n\n\n\n\n\nprogress (subslide 1)\n\n\n\n\n\n\n\nprogress (subslide 2)\n\n\n\n\n\n\n\nprogress (subslide 3)\n\n\n\n\n\n\n\n\n\nprogress (subslide 4)\n\n\n\n\n\n\n\nprogress (subslide 5)\n\n\n\n\n\n\n\nprogress (subslide 6)",
-    "crumbs": [
-      "Toolbox",
-      "How much longer? 🥱"
-    ]
-  },
-  {
-    "objectID": "toolbox/big.html",
-    "href": "toolbox/big.html",
-    "title": "Scaling big",
-    "section": "",
-    "text": "Scaling big\nUse the function #toolbox.big to scale some content such that it fills the available width and height on a slide. In particular, it will fill the height 1fr. Keep this in mind when using other elements of fractional height, such as v(1fr).\n#toolbox.big[BIG]\n\n\n\nbig\n\n\nHow well this works depends on the content you want to scale. Note that the scaling is not proportional so the content might get distorted. Insert linebreaks to adjust how the result looks.\nIn this more complex example, we have the same text scaled by big three times but we successively adjust it using linebreaks and the leading height.\n#slide[\n  #toolbox.big[\n    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod\n    tempor incididunt ut labore et dolore magnam aliquam quaerat.\n  ]\n]\n\n#slide[\n  #toolbox.big[\n    Lorem ipsum dolor sit amet, consectetur \\ adipiscing elit, sed do eiusmod \\\n    tempor incididunt ut labore et dolore \\ magnam aliquam quaerat.\n  ]\n]\n\n#slide[\n  #set par(leading: .1em)\n  #toolbox.big[\n    Lorem ipsum dolor sit amet, consectetur \\ adipiscing elit, sed do eiusmod \\\n    tempor incididunt ut labore et dolore \\ magnam aliquam quaerat.\n  ]\n]\n\n\n\n\n\n\nbig-complex (subslide 1)\n\n\n\n\n\n\n\nbig-complex (subslide 2)\n\n\n\n\n\n\n\nbig-complex (subslide 3)",
-    "crumbs": [
-      "Toolbox",
-      "Scaling big"
+      "External tools",
+      "External tools"
     ]
   },
   {
@@ -49,6 +16,16 @@
     "title": "Polylux",
     "section": "",
     "text": "logo",
+    "crumbs": [
+      "Polylux"
+    ]
+  },
+  {
+    "objectID": "index.html#about-polylux2",
+    "href": "index.html#about-polylux2",
+    "title": "Polylux",
+    "section": "About polylux2",
+    "text": "About polylux2\nThis site documents polylux2, a fork of the original Polylux package maintained by Christopher Kenny at christopherkenny/polylux2. All credit for the original design and implementation goes to Andreas Kröpelin and the Polylux contributors; see Contributing and License below for details on how this fork relates to the upstream project.",
     "crumbs": [
       "Polylux"
     ]
@@ -78,7 +55,7 @@
     "href": "index.html#contributing",
     "title": "Polylux",
     "section": "Contributing",
-    "text": "Contributing\nThis package is free and open source. You can find the code on GitHub where you can also create issues or pull requests.",
+    "text": "Contributing\nThis package is free and open source. polylux2 is a fork of the original Polylux package, maintained at christopherkenny/polylux2. You can find the code there, where you can also create issues or pull requests for this fork. For the original, upstream project, see andreasKroepelin/polylux.",
     "crumbs": [
       "Polylux"
     ]
@@ -88,50 +65,44 @@
     "href": "index.html#license",
     "title": "Polylux",
     "section": "License",
-    "text": "License\nPolylux is released under the MIT license.",
+    "text": "License\nPolylux is released under the MIT license. polylux2 is a fork maintained by Christopher Kenny; see the LICENSE file for full copyright details.",
     "crumbs": [
       "Polylux"
     ]
   },
   {
-    "objectID": "external/external.html",
-    "href": "external/external.html",
-    "title": "External tools",
+    "objectID": "dynamic/complex.html",
+    "href": "dynamic/complex.html",
+    "title": "Complex display rules",
     "section": "",
-    "text": "External tools\nMost users will only come across Typst itself and some off-the-shelf PDF viewer. However, there are some additional tools that might come in handy and Polylux supports some of their special needs.\nSo far, this support is limited to the pdfpc presentation tool.",
+    "text": "Complex display rules\nThere are multiple options to define more complex display rules than a single number.\n\nArray\nThe simplest extension is to use an array. For example\n#slide[\n  #uncover((1, 2, 4))[uncovered only on subslides 1, 2, and 4]\n]\nresults in:\n\n\n\n\n\n\nrule-array (subslide 1)\n\n\n\n\n\n\n\nrule-array (subslide 2)\n\n\n\n\n\n\n\nrule-array (subslide 3)\n\n\n\n\n\n\n\n\n\nrule-array (subslide 4)\n\n\n\n\n\nThe array elements can actually themselves be any kind of rule that is explained on this page.\n\n\nInterval\nYou can also provide a (bounded or half-bounded) interval in the form of a dictionary with a beginning and/or an until key:\n#slide[\n  #only((beginning: 1, until: 5))[Content displayed on subslides 1, 2, 3, 4, and 5 \\ ]\n  #only((beginning: 2))[Content displayed on subslide 2 and every following one \\ ]\n  #only((until: 3))[Content displayed on subslides 1, 2, and 3 \\ ]\n  #only((:))[Content that is always displayed]\n]\nresults in:\n\n\n\n\n\n\nrule-interval (subslide 1)\n\n\n\n\n\n\n\nrule-interval (subslide 2)\n\n\n\n\n\n\n\nrule-interval (subslide 3)\n\n\n\n\n\n\n\n\n\nrule-interval (subslide 4)\n\n\n\n\n\n\n\nrule-interval (subslide 5)\n\n\n\n\n\nIn the last case, you would not need to use #only anyways, obviously.\n\n\nConvenient syntax as strings\nIn principle, you can specify every rule using numbers, arrays, and intervals. However, consider having to write\n#uncover(((until: 2), 4, (beginning: 6, until: 8), (beginning: 10)))[polylux]\nThat’s only fun the first time. Therefore, we provide a convenient alternative. You can equivalently write:\n#uncover(\"-2, 4, 6-8, 10-\")[Polylux]\nwhich results in:\n\n\n\n\n\n\nrule-string (subslide 1)\n\n\n\n\n\n\n\nrule-string (subslide 2)\n\n\n\n\n\n\n\nrule-string (subslide 3)\n\n\n\n\n\n\n\n\n\nrule-string (subslide 4)\n\n\n\n\n\n\n\nrule-string (subslide 5)\n\n\n\n\n\n\n\nrule-string (subslide 6)\n\n\n\n\n\n\n\n\n\nrule-string (subslide 7)\n\n\n\n\n\n\n\nrule-string (subslide 8)\n\n\n\n\n\n\n\nrule-string (subslide 9)\n\n\n\n\n\n\n\n\n\nrule-string (subslide 10)\n\n\n\n\n\nMuch better, right? The spaces are optional, so just use them if you find it more readable.\nUnless you are creating those function calls programmaticly, it is a good recommendation to use the single-number syntax (#only(1)[...]) if that suffices and the string syntax for any more complex use case.",
     "crumbs": [
-      "External tools",
-      "External tools"
+      "Dynamic slides",
+      "Complex display rules"
     ]
   },
   {
-    "objectID": "changelog.html",
-    "href": "changelog.html",
-    "title": "Changelog",
+    "objectID": "dynamic/reveal-code.html",
+    "href": "dynamic/reveal-code.html",
+    "title": "Succesively uncover code",
     "section": "",
-    "text": "After what must have felt like ages for everyone, we finally have a new release of Polylux! 🥳\nVersion 0.4.0 is now fit for Typst 0.12.0 and has become more streamlined. From now on, we rely on the Typst support for templates and the package does not ship builtin themes anymore. In the meantime, other packages for building slides in Typst have gained traction and it is a natural question why you should still use Polylux. Well, that I don’t know. But I still use Polylux because I like a “non hacky” way of using Typst. Polylux has now taken on the policy that features are preferrably not implemented rather than implemented in hacky way, potentially relying on brittle internals of Typst and such. There is of course no rigorous definition for that so in the end it comes down to what I consider acceptable for myself. At the same time, I hope that other might share this view and can enjoy this new version of Polylux.\nSome notable changes, besides the removal of themes: - The dreaded #pause was removed in favour of #show: later. - There is a new toolbox module exported by Polylux that contains many helpful elements for designing your own slides (some of them have previously been available in the now removed utils module). - The book has been improved both in content and visuals. - By changing the internal infrastructure for creating example previews, Polylux is finally considered a Typst repo by GitHub :D - The Polylux repository now resides in a custom polylux-typ GitHub organisation. - Polylux has a new logo. It’s more elegant than the previous one although I know that some liked the silliness of the googly eyes…\nI recommend going through the book and finding out how Polylux works now!\n\n\n\n\nThe previously existing module helpers was transformed to utils and now contains many more useful features.\nThe modules logic and utils are now directly accessible when importing Polylux (it was a bug that it did not work previously).\nWe finally have an ergonomic #pause function that does not expect the user to keep track of some counter themselves.\nThe #alternatives function has gained lots of friends that make specific situations a bit more convenient, namely #alternatives-match, alternatives-cases, and alternatives-fn. Also, there is a parameter repeat-last for #alternatives now.\nBullet lists, enumerations, and term lists now have custom functions to display them dynamically: #list-one-by-one, #enum-one-by-one, and #terms-one-by-one.\nThere is a new function #fit-to-height that allows you to resize content to a given height (especially make it fill the remaining space on a slide!) Thank you to @ntjess for the initial implementation!\nPreviously, certain themes allowed you to easily put multiple content elements next to each other. This is now a commonly available function: #side-by-side. You can use it regardless of any theme and the functionality was removed from the previously implementing themes.\nPolylux now has special support for the pdfpc presentation viewer. You can add speaker notes, hide slides, configure the timer, and more all from within your Typst source file. Thank you to @JuliusFreudenberger for the inspiration and for creating the polylux2pdfpc AUR package.",
+    "text": "Since Typst has great builtin support for typesetting code, Polylux wants to provide a convenience feature for this as well. Namely, the function #reveal-code takes a code block and splits it into parts shown on different subslides.\nAs an example:\n#reveal-code(lines: (1, 3, 6, 7))[```rust\n  pub fn main() {\n    let x = vec![3, 4, 1];\n    let y = &x;\n    if let Some(a) = x.first() {\n      dbg!(a);\n    } else {\n      println!(\"x is empty.\");\n    }\n  }\n```]\n\n\n\n\n\n\nreveal-code (subslide 1)\n\n\n\n\n\n\n\nreveal-code (subslide 2)\n\n\n\n\n\n\n\nreveal-code (subslide 3)\n\n\n\n\n\n\n\n\n\nreveal-code (subslide 4)\n\n\n\n\n\n\n\nreveal-code (subslide 5)\n\n\n\n\n\nAs we can see, the code is revealed up to the first, third, sixth, and then seventh row on each new subslide. Every line that has already been previously revealed is shown in gray. Afterwards, the whole code is shown without alterations.\n\n\nYou can configure a couple of things about reveal-code:\n\n\nAs demonstrated above, this is the default behaviour. If you don’t want that, use the option full: false like so:\n#reveal-code(lines: (2, 4), full: false)[```\n  first line\n  second line\n  third line\n  fourth line\n  fifth line\n```]\n\n\n\nBy default, previously uncovered lines are shown in gray and not yet uncovered lines are hidden. This can be controlled using the before and after options. Like the cover mode for other functions, these accept either hide or any color. The default is thus before: gray and after: hide.\n\n\n\nSimilar to here, there is also a start option to specify the first subslide where code is revealed.",
     "crumbs": [
-      "Changelog"
+      "Dynamic slides",
+      "Helper functions",
+      "Succesively uncover code"
     ]
   },
   {
-    "objectID": "changelog.html#section",
-    "href": "changelog.html#section",
-    "title": "Changelog",
+    "objectID": "dynamic/reveal-code.html#configuration",
+    "href": "dynamic/reveal-code.html#configuration",
+    "title": "Succesively uncover code",
     "section": "",
-    "text": "After what must have felt like ages for everyone, we finally have a new release of Polylux! 🥳\nVersion 0.4.0 is now fit for Typst 0.12.0 and has become more streamlined. From now on, we rely on the Typst support for templates and the package does not ship builtin themes anymore. In the meantime, other packages for building slides in Typst have gained traction and it is a natural question why you should still use Polylux. Well, that I don’t know. But I still use Polylux because I like a “non hacky” way of using Typst. Polylux has now taken on the policy that features are preferrably not implemented rather than implemented in hacky way, potentially relying on brittle internals of Typst and such. There is of course no rigorous definition for that so in the end it comes down to what I consider acceptable for myself. At the same time, I hope that other might share this view and can enjoy this new version of Polylux.\nSome notable changes, besides the removal of themes: - The dreaded #pause was removed in favour of #show: later. - There is a new toolbox module exported by Polylux that contains many helpful elements for designing your own slides (some of them have previously been available in the now removed utils module). - The book has been improved both in content and visuals. - By changing the internal infrastructure for creating example previews, Polylux is finally considered a Typst repo by GitHub :D - The Polylux repository now resides in a custom polylux-typ GitHub organisation. - Polylux has a new logo. It’s more elegant than the previous one although I know that some liked the silliness of the googly eyes…\nI recommend going through the book and finding out how Polylux works now!",
+    "text": "You can configure a couple of things about reveal-code:\n\n\nAs demonstrated above, this is the default behaviour. If you don’t want that, use the option full: false like so:\n#reveal-code(lines: (2, 4), full: false)[```\n  first line\n  second line\n  third line\n  fourth line\n  fifth line\n```]\n\n\n\nBy default, previously uncovered lines are shown in gray and not yet uncovered lines are hidden. This can be controlled using the before and after options. Like the cover mode for other functions, these accept either hide or any color. The default is thus before: gray and after: hide.\n\n\n\nSimilar to here, there is also a start option to specify the first subslide where code is revealed.",
     "crumbs": [
-      "Changelog"
-    ]
-  },
-  {
-    "objectID": "changelog.html#v0.3.0",
-    "href": "changelog.html#v0.3.0",
-    "title": "Changelog",
-    "section": "",
-    "text": "The previously existing module helpers was transformed to utils and now contains many more useful features.\nThe modules logic and utils are now directly accessible when importing Polylux (it was a bug that it did not work previously).\nWe finally have an ergonomic #pause function that does not expect the user to keep track of some counter themselves.\nThe #alternatives function has gained lots of friends that make specific situations a bit more convenient, namely #alternatives-match, alternatives-cases, and alternatives-fn. Also, there is a parameter repeat-last for #alternatives now.\nBullet lists, enumerations, and term lists now have custom functions to display them dynamically: #list-one-by-one, #enum-one-by-one, and #terms-one-by-one.\nThere is a new function #fit-to-height that allows you to resize content to a given height (especially make it fill the remaining space on a slide!) Thank you to @ntjess for the initial implementation!\nPreviously, certain themes allowed you to easily put multiple content elements next to each other. This is now a commonly available function: #side-by-side. You can use it regardless of any theme and the functionality was removed from the previously implementing themes.\nPolylux now has special support for the pdfpc presentation viewer. You can add speaker notes, hide slides, configure the timer, and more all from within your Typst source file. Thank you to @JuliusFreudenberger for the inspiration and for creating the polylux2pdfpc AUR package.",
-    "crumbs": [
-      "Changelog"
+      "Dynamic slides",
+      "Helper functions",
+      "Succesively uncover code"
     ]
   },
   {
@@ -194,50 +165,163 @@
     ]
   },
   {
-    "objectID": "dynamic/later.html",
-    "href": "dynamic/later.html",
-    "title": "show: later to reveal content piece by piece",
+    "objectID": "dynamic/syntax.html",
+    "href": "dynamic/syntax.html",
+    "title": "General syntax for #only and #uncover",
     "section": "",
-    "text": "Consider some code like the following:\n#uncover(\"1-\")[first]\n#uncover(\"2-\")[second]\n#uncover(\"3-\")[third]\nThe goal here is to uncover parts of the slide one by one, so that an increasing amount of content is shown, but we don’t want to specify all subslide indices manually, ideally.\nIf you have used the LaTeX beamer package before, you might be familiar with the \\pause command. It makes everything after it on that slide appear on the next subslide. Features of the kind “everything after this” are handled in Typst using the #show: feature. Namely, #show: some-function uses the following content as an argument to some-function. Polylux provides the later function that makes its argument appear on the next subslide. So, we can equivalently write the above code as:\nfirst\n#show: later\nsecond\n#show: later\nthird\nThis results in\n\n\n\n\n\n\nlater (subslide 1)\n\n\n\n\n\n\n\nlater (subslide 2)\n\n\n\n\n\n\n\nlater (subslide 3)\n\n\n\n\n\n#show: later should mainly be used when you want to distribute a lot of code onto different subslides. For smaller pieces of code, consider one of the functions described next.\n\n\nNote that, like every show-rule, #show: later only affects the rest of its surrounding scope. For other (potentially conceptually later) content in a different scope, you have to use a new #show: later rule. If you see weird interactions between different scopes using #show: later or you get a warning from Typst that layouting did not converge, you can make use of the optional argument strand (set to 1 by default):\n#[\n  this is scope 1\n  #show: later\n  still scope 1\n]\n#[\n  this is scope 2\n  #show: later.with(strand: 2)\n  still scope 2\n]\nEvery strand works independently of every other.",
+    "text": "General syntax for #only and #uncover\nBoth functions are used in the same way. They each take two positional arguments, the first is a description of the subslides the content is supposed to be shown on, the second is the content itself. Note that Typst provides some syntactic sugar for trailing content arguments, namely putting the content block behind the function call.\nYou could therefore write:\n#slide[\n  before #only(2)[*displayed only on subslide 2*] after\n\n  before #uncover(2)[*uncovered only on subslide 2*] after\n]\n…resulting in\n\n\n\n\n\n\nonly-uncover (subslide 1)\n\n\n\n\n\n\n\nonly-uncover (subslide 2)\n\n\n\n\n\n(Note again that the gray border is not part of the slides and that the labels indicating the index of the subslide are also added afterwards.)\nYou can clearly see the difference in behaviour between only and uncover. In the first line, “after” moves but not in the second line.\nIn this example, we specified only a single subslide index, resulting in content that is shown on that exact subslide and at no other one. Let’s explore more complex rules next.",
     "crumbs": [
       "Dynamic slides",
-      "Helper functions",
-      "`show: later` to reveal content piece by piece"
+      "General syntax for `#only` and `#uncover`"
     ]
   },
   {
-    "objectID": "dynamic/later.html#multiple-scopes",
-    "href": "dynamic/later.html#multiple-scopes",
-    "title": "show: later to reveal content piece by piece",
+    "objectID": "dynamic/handout.html",
+    "href": "dynamic/handout.html",
+    "title": "Handout mode",
     "section": "",
-    "text": "Note that, like every show-rule, #show: later only affects the rest of its surrounding scope. For other (potentially conceptually later) content in a different scope, you have to use a new #show: later rule. If you see weird interactions between different scopes using #show: later or you get a warning from Typst that layouting did not converge, you can make use of the optional argument strand (set to 1 by default):\n#[\n  this is scope 1\n  #show: later\n  still scope 1\n]\n#[\n  this is scope 2\n  #show: later.with(strand: 2)\n  still scope 2\n]\nEvery strand works independently of every other.",
+    "text": "Handout mode\nIf you distribute your slides after your talk for further reference, you might not want to keep in all the dynamic content. Imagine using item-by-item on a long list and readers having to scroll through endless pages when they just want to see the full list.\nYou can use #enable-handout-mode(true) at the top of your code to achieve this:\nIt has the effect that all dynamic visibility of elements that reserve space is switched off. For example,\n#enable-handout-mode(true)\n// ...\n#slide[\n  Some text.\n  #uncover(\"3-\")[You cannot always see this.]\n  Or can you?\n  #show: later\n\n  And what about this?\n]\nbecomes:\n\n\n\nhandout\n\n\nNote that only and alternatives are not affected as there is no obvious way to unify their content to one slide.",
     "crumbs": [
       "Dynamic slides",
-      "Helper functions",
-      "`show: later` to reveal content piece by piece"
+      "Handout mode"
     ]
   },
   {
-    "objectID": "dynamic/cover.html",
-    "href": "dynamic/cover.html",
-    "title": "Cover mode",
+    "objectID": "toolbox/sections.html",
+    "href": "toolbox/sections.html",
+    "title": "Sections",
     "section": "",
-    "text": "Cover mode\nCovered content (using #uncover, #one-by-one, #item-by-item, or #show: later) is completely invisible, by default. You can decide to make it visible but less prominent using the optional mode argument to each of those functions. The mode argument takes two kinds of values: hide (the default) or any color. When using a color as the mode, text is printed in that color.\nUse it as follows:\n#uncover(3, mode: gray)[abc]\n\n#one-by-one(start: 2, mode: gray)[def ][ghi]\n\n#item-by-item(mode: gray)[\n  - jkl\n  - mno\n]\n\n#show: later.with(mode: gray)\npqr\nresulting in\n\n\n\n\n\n\ncover (subslide 1)\n\n\n\n\n\n\n\ncover (subslide 2)\n\n\n\n\n\n\n\ncover (subslide 3)\n\n\n\n\n\nWarning! The “color mode” really only wraps the covered content in a\n#text(fill: mode)[...]\nso it has only limited control over the actual display. Especially - text that defines its own color (e.g. syntax highlighting), - visualisations, - images\nwill not be affected by that. This makes the color mode only somewhat useful today. (Relevant GitHub issue)",
+    "text": "Sections\nAnother way of expressing where we are in a presentation is working with sections.\nIn your presentation, you can incorporate the following features from the toolbox module:\nFirst, whenever you want to start a new section, you can call\n#toolbox.register-section(the-section-name)\nwith whatever name you want.\nBased on that, you can then display what section the presenter is currently in by using:\n#toolbox.current-section\nIf no section has been registered so far, this is empty content ([]).\nAnd finally, you might want to display some kind of overview over all the sections. This is achieved by:\n#toolbox.all-sections((sections, current) =&gt; [some content])\nall-sections takes a function with two arguments and uses that to produce some content based on all sections in the presentation and the current one.\nFor example:\n#let sections-band = toolbox.all-sections( (sections, current) =&gt; {\n  set text(fill: gray, size: .8em)\n  sections\n    .map(s =&gt; if s == current { strong(s) } else { s })\n    .join([ • ])\n})\n\n#set page(footer: sections-band)\n\n#slide[\n  #toolbox.register-section[The beginning]\n\n  #lorem(5)\n]\n\n#slide[\n  #lorem(3)\n]\n\n#slide[\n  #toolbox.register-section[The middle]\n\n  #lorem(6)\n]\n\n#slide[\n  #toolbox.register-section[The end]\n\n  #lorem(4)\n]\n\n\n\n\n\n\nsections-band (subslide 1)\n\n\n\n\n\n\n\nsections-band (subslide 2)\n\n\n\n\n\n\n\nsections-band (subslide 3)\n\n\n\n\n\n\n\n\n\nsections-band (subslide 4)\n\n\n\n\n\nAnother example, producing a table of contents and title slides for each new section:\n#let my-new-section(name) = slide[\n  #set align(horizon)\n  #set text(size: 2em)\n  #toolbox.register-section(name)\n\n  #strong(name)\n]\n\n#slide[\n  #toolbox.all-sections((sections, current) =&gt; {\n    enum(..sections)\n  })\n]\n\n#my-new-section[The beginning]\n\n#slide[\n  We are currently in Section \"#toolbox.current-section\" and I like it so far.\n]\n\n#slide[\n  Still in the same section.\n]\n\n#my-new-section[The middle]\n\n#slide[\n  Oh, new section. What comes after \"#toolbox.current-section\"?\n]\n\n#my-new-section[The end]\n\n#slide[\n  You might have guessed this, to be honest.\n]\n\n\n\n\n\n\nsections (subslide 1)\n\n\n\n\n\n\n\nsections (subslide 2)\n\n\n\n\n\n\n\nsections (subslide 3)\n\n\n\n\n\n\n\n\n\nsections (subslide 4)\n\n\n\n\n\n\n\nsections (subslide 5)\n\n\n\n\n\n\n\nsections (subslide 6)\n\n\n\n\n\n\n\n\n\nsections (subslide 7)\n\n\n\n\n\n\n\nsections (subslide 8)",
     "crumbs": [
-      "Dynamic slides",
-      "Cover mode"
+      "Toolbox",
+      "Sections"
     ]
   },
   {
-    "objectID": "dynamic/helper.html",
-    "href": "dynamic/helper.html",
-    "title": "Higher level helper functions",
+    "objectID": "toolbox/big.html",
+    "href": "toolbox/big.html",
+    "title": "Scaling big",
     "section": "",
-    "text": "Higher level helper functions\nWith #only and #uncover you can come a long way but there are some reoccurring situations for which helper functions are provided. We call them “higher level” because they use #only and #uncover under the hood and operate on larger pieces of content.\nFor the common case of succesively revealing content, there are #pause and #one-by-one and its friends. For substituting content, we have #alternatives in different variants. The following sections will describe these functions in detail.",
+    "text": "Scaling big\nUse the function #toolbox.big to scale some content such that it fills the available width and height on a slide. In particular, it will fill the height 1fr. Keep this in mind when using other elements of fractional height, such as v(1fr).\n#toolbox.big[BIG]\n\n\n\nbig\n\n\nHow well this works depends on the content you want to scale. Note that the scaling is not proportional so the content might get distorted. Insert linebreaks to adjust how the result looks.\nIn this more complex example, we have the same text scaled by big three times but we successively adjust it using linebreaks and the leading height.\n#slide[\n  #toolbox.big[\n    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod\n    tempor incididunt ut labore et dolore magnam aliquam quaerat.\n  ]\n]\n\n#slide[\n  #toolbox.big[\n    Lorem ipsum dolor sit amet, consectetur \\ adipiscing elit, sed do eiusmod \\\n    tempor incididunt ut labore et dolore \\ magnam aliquam quaerat.\n  ]\n]\n\n#slide[\n  #set par(leading: .1em)\n  #toolbox.big[\n    Lorem ipsum dolor sit amet, consectetur \\ adipiscing elit, sed do eiusmod \\\n    tempor incididunt ut labore et dolore \\ magnam aliquam quaerat.\n  ]\n]\n\n\n\n\n\n\nbig-complex (subslide 1)\n\n\n\n\n\n\n\nbig-complex (subslide 2)\n\n\n\n\n\n\n\nbig-complex (subslide 3)",
+    "crumbs": [
+      "Toolbox",
+      "Scaling big"
+    ]
+  },
+  {
+    "objectID": "toolbox/toolbox.html",
+    "href": "toolbox/toolbox.html",
+    "title": "Toolbox",
+    "section": "",
+    "text": "Toolbox\nPolylux exports a module called toolbox that provides some common building blocks for designing your slides.",
+    "crumbs": [
+      "Toolbox",
+      "Toolbox"
+    ]
+  },
+  {
+    "objectID": "changelog.html",
+    "href": "changelog.html",
+    "title": "Changelog",
+    "section": "",
+    "text": "After what must have felt like ages for everyone, we finally have a new release of Polylux! 🥳\nVersion 0.4.0 is now fit for Typst 0.12.0 and has become more streamlined. From now on, we rely on the Typst support for templates and the package does not ship builtin themes anymore. In the meantime, other packages for building slides in Typst have gained traction and it is a natural question why you should still use Polylux. Well, that I don’t know. But I still use Polylux because I like a “non hacky” way of using Typst. Polylux has now taken on the policy that features are preferrably not implemented rather than implemented in hacky way, potentially relying on brittle internals of Typst and such. There is of course no rigorous definition for that so in the end it comes down to what I consider acceptable for myself. At the same time, I hope that other might share this view and can enjoy this new version of Polylux.\nSome notable changes, besides the removal of themes: - The dreaded #pause was removed in favour of #show: later. - There is a new toolbox module exported by Polylux that contains many helpful elements for designing your own slides (some of them have previously been available in the now removed utils module). - The book has been improved both in content and visuals. - By changing the internal infrastructure for creating example previews, Polylux is finally considered a Typst repo by GitHub :D - The Polylux repository now resides in a custom polylux-typ GitHub organisation. - Polylux has a new logo. It’s more elegant than the previous one although I know that some liked the silliness of the googly eyes…\nI recommend going through the book and finding out how Polylux works now!\n\n\n\n\nThe previously existing module helpers was transformed to utils and now contains many more useful features.\nThe modules logic and utils are now directly accessible when importing Polylux (it was a bug that it did not work previously).\nWe finally have an ergonomic #pause function that does not expect the user to keep track of some counter themselves.\nThe #alternatives function has gained lots of friends that make specific situations a bit more convenient, namely #alternatives-match, alternatives-cases, and alternatives-fn. Also, there is a parameter repeat-last for #alternatives now.\nBullet lists, enumerations, and term lists now have custom functions to display them dynamically: #list-one-by-one, #enum-one-by-one, and #terms-one-by-one.\nThere is a new function #fit-to-height that allows you to resize content to a given height (especially make it fill the remaining space on a slide!) Thank you to @ntjess for the initial implementation!\nPreviously, certain themes allowed you to easily put multiple content elements next to each other. This is now a commonly available function: #side-by-side. You can use it regardless of any theme and the functionality was removed from the previously implementing themes.\nPolylux now has special support for the pdfpc presentation viewer. You can add speaker notes, hide slides, configure the timer, and more all from within your Typst source file. Thank you to @JuliusFreudenberger for the inspiration and for creating the polylux2pdfpc AUR package.",
+    "crumbs": [
+      "Changelog"
+    ]
+  },
+  {
+    "objectID": "changelog.html#section",
+    "href": "changelog.html#section",
+    "title": "Changelog",
+    "section": "",
+    "text": "After what must have felt like ages for everyone, we finally have a new release of Polylux! 🥳\nVersion 0.4.0 is now fit for Typst 0.12.0 and has become more streamlined. From now on, we rely on the Typst support for templates and the package does not ship builtin themes anymore. In the meantime, other packages for building slides in Typst have gained traction and it is a natural question why you should still use Polylux. Well, that I don’t know. But I still use Polylux because I like a “non hacky” way of using Typst. Polylux has now taken on the policy that features are preferrably not implemented rather than implemented in hacky way, potentially relying on brittle internals of Typst and such. There is of course no rigorous definition for that so in the end it comes down to what I consider acceptable for myself. At the same time, I hope that other might share this view and can enjoy this new version of Polylux.\nSome notable changes, besides the removal of themes: - The dreaded #pause was removed in favour of #show: later. - There is a new toolbox module exported by Polylux that contains many helpful elements for designing your own slides (some of them have previously been available in the now removed utils module). - The book has been improved both in content and visuals. - By changing the internal infrastructure for creating example previews, Polylux is finally considered a Typst repo by GitHub :D - The Polylux repository now resides in a custom polylux-typ GitHub organisation. - Polylux has a new logo. It’s more elegant than the previous one although I know that some liked the silliness of the googly eyes…\nI recommend going through the book and finding out how Polylux works now!",
+    "crumbs": [
+      "Changelog"
+    ]
+  },
+  {
+    "objectID": "changelog.html#v0.3.0",
+    "href": "changelog.html#v0.3.0",
+    "title": "Changelog",
+    "section": "",
+    "text": "The previously existing module helpers was transformed to utils and now contains many more useful features.\nThe modules logic and utils are now directly accessible when importing Polylux (it was a bug that it did not work previously).\nWe finally have an ergonomic #pause function that does not expect the user to keep track of some counter themselves.\nThe #alternatives function has gained lots of friends that make specific situations a bit more convenient, namely #alternatives-match, alternatives-cases, and alternatives-fn. Also, there is a parameter repeat-last for #alternatives now.\nBullet lists, enumerations, and term lists now have custom functions to display them dynamically: #list-one-by-one, #enum-one-by-one, and #terms-one-by-one.\nThere is a new function #fit-to-height that allows you to resize content to a given height (especially make it fill the remaining space on a slide!) Thank you to @ntjess for the initial implementation!\nPreviously, certain themes allowed you to easily put multiple content elements next to each other. This is now a commonly available function: #side-by-side. You can use it regardless of any theme and the functionality was removed from the previously implementing themes.\nPolylux now has special support for the pdfpc presentation viewer. You can add speaker notes, hide slides, configure the timer, and more all from within your Typst source file. Thank you to @JuliusFreudenberger for the inspiration and for creating the polylux2pdfpc AUR package.",
+    "crumbs": [
+      "Changelog"
+    ]
+  },
+  {
+    "objectID": "getting-started/getting-started.html",
+    "href": "getting-started/getting-started.html",
+    "title": "Getting started",
+    "section": "",
+    "text": "You can find this package in the official Typst package repository. To use it, start your document with\n#import \"@preview/polylux:0.4.0\": *\nYou now have two options: 1. Start from one of the templates. If you want just a minimal scaffold to get you started, try out the basic template by running typst init @preview/basic-polylux:0.1.0 your-cool-project. 2. Start from scratch.\nWe will choose the second option for this tutorial. Let’s start with the absolute minimal effort. What characterises a set of slides? Well, each slide (or PDF page, as we already established) has specific dimensions. Some time ago, a 4:3 format was common, nowadays 16:9 is used more often. Typst has those built in:\n#set page(paper: \"presentation-16-9\")\nYou probably don’t want your audience to carry magnifying glasses, so let’s set the font size to something readable from the last row:\n#set text(size: 25pt)\nWe should be ready do go to create some actual slides now. We will use the function slide for this, which is kind of at the core of this package.\n// Remember to actually import Polylux before this!\n#slide[\n  Hello, world!\n]\nAnd here is the result (the gray border is not part of the output but it makes the slide easier to see here):\n\n\n\nhelloworld\n\n\nAlready kinda looks like a slide, but also a bit boring, maybe. We should add a title slide before that so that our audience actually knows what talk they are attending. Also, let us choose a nicer font and maybe add some colour? We modify the #set page and #set text commands for that:\n#set page(paper: \"presentation-16-9\", fill: teal.lighten(90%))\n#set text(size: 25pt, font: \"Lato\")\n\n#slide[\n  #set align(horizon)\n  = My fabulous talk\n\n  Jane Doe\n\n  Conference on Advances in Slide Making\n]\n\n#slide[\n  Hello, world!\n]\n\n\n\n\n\n\ntitleslide (subslide 1)\n\n\n\n\n\n\n\ntitleslide (subslide 2)\n\n\n\n\n\nNot bad, right? Another thing that is usually a good idea is to have a title on each slide. That is also no big deal by using off-the-shelf Typst features, so let’s modify our first slide:\n#slide[\n  == My slide title\n  Hello, world!\n]\nThis is starting to look like a real presentation:\n\n\n\n\n\n\nslidetitle (subslide 1)\n\n\n\n\n\n\n\nslidetitle (subslide 2)\n\n\n\n\n\n\n\nTo be honest, everything we did so far would have been just as easy without using Polylux at all. So why should you care about it?\nConsider the following situation: You have a slide where parts of the content appear or disappear, or the colour of some text changes, or some other small-sized change. Would you like to duplicate the whole slide just so to create this affect? And then maintain multiple copies of the same content, making sure never to forget updating all copies when your content evolves? Of course you wouldn’t and, gladly, Polylux can handle this for you.\nThis kind of feature is called dynamic content or overlays (loosely speaking, you might also say animations but that might be a bit of a stretch, nothing actually “moves” on PDF pages).\nSo how does that work in Polylux? As a quick example, let’s add a little quiz to our slides:\n#slide[\n  == A quiz\n\n  What is the capital of the Republic of Benin?\n\n  #show: later\n  Porto-Novo\n]\n\n\n\n\n\n\nquiz (subslide 1)\n\n\n\n\n\n\n\nquiz (subslide 2)\n\n\n\n\n\n\n\nquiz (subslide 3)\n\n\n\n\n\n\n\n\n\nquiz (subslide 4)\n\n\n\n\n\nNote how two more slides have been created even though we declared only one.\nThe next sections will explain dynamic content in Polylux in all its details.\nFor reference, here is the full source code for the slides we developed in this section:\n#import \"@preview/polylux:0.4.0\": *\n\n#set page(paper: \"presentation-16-9\", fill: teal.lighten(90%))\n#set text(size: 25pt, font: \"Lato\")\n\n#slide[\n  #set align(horizon)\n  = My fabulous talk\n\n  Jane Doe\n\n  Conference on Advances in Slide Making\n]\n\n#slide[\n  == My slide title\n  Hello, world!\n]\n\n#slide[\n  == A quiz\n\n  What is the capital of the Republic of Benin?\n\n  #show: later\n  Porto-Novo\n]",
+    "crumbs": [
+      "Getting started"
+    ]
+  },
+  {
+    "objectID": "getting-started/getting-started.html#so-what",
+    "href": "getting-started/getting-started.html#so-what",
+    "title": "Getting started",
+    "section": "",
+    "text": "To be honest, everything we did so far would have been just as easy without using Polylux at all. So why should you care about it?\nConsider the following situation: You have a slide where parts of the content appear or disappear, or the colour of some text changes, or some other small-sized change. Would you like to duplicate the whole slide just so to create this affect? And then maintain multiple copies of the same content, making sure never to forget updating all copies when your content evolves? Of course you wouldn’t and, gladly, Polylux can handle this for you.\nThis kind of feature is called dynamic content or overlays (loosely speaking, you might also say animations but that might be a bit of a stretch, nothing actually “moves” on PDF pages).\nSo how does that work in Polylux? As a quick example, let’s add a little quiz to our slides:\n#slide[\n  == A quiz\n\n  What is the capital of the Republic of Benin?\n\n  #show: later\n  Porto-Novo\n]\n\n\n\n\n\n\nquiz (subslide 1)\n\n\n\n\n\n\n\nquiz (subslide 2)\n\n\n\n\n\n\n\nquiz (subslide 3)\n\n\n\n\n\n\n\n\n\nquiz (subslide 4)\n\n\n\n\n\nNote how two more slides have been created even though we declared only one.\nThe next sections will explain dynamic content in Polylux in all its details.\nFor reference, here is the full source code for the slides we developed in this section:\n#import \"@preview/polylux:0.4.0\": *\n\n#set page(paper: \"presentation-16-9\", fill: teal.lighten(90%))\n#set text(size: 25pt, font: \"Lato\")\n\n#slide[\n  #set align(horizon)\n  = My fabulous talk\n\n  Jane Doe\n\n  Conference on Advances in Slide Making\n]\n\n#slide[\n  == My slide title\n  Hello, world!\n]\n\n#slide[\n  == A quiz\n\n  What is the capital of the Republic of Benin?\n\n  #show: later\n  Porto-Novo\n]",
+    "crumbs": [
+      "Getting started"
+    ]
+  },
+  {
+    "objectID": "toolbox/side-by-side.html",
+    "href": "toolbox/side-by-side.html",
+    "title": "Side by side",
+    "section": "",
+    "text": "Side by side\nTo make good use of the space on a slide, you will often want to place content next to each other. For convenience, toolbox provides the function #side-by-side for this purpose. It is basically a thin wrapper around the Typst function #grid but tailored towards this specific usecase. In its simplest form, you can use it as\n#toolbox.side-by-side[\n  #lorem(7)\n][\n  #lorem(10)\n][\n  #lorem(5)\n]\n\n\n\nside-by-side\n\n\nAs you can see, the content arguments you provide will be placed next to each other with equal proportions of width. A spacing (gutter) of 1em will also be put between them.\nThe widths and gutter can be configured using the columns and gutter optional arguments, respectively. They are propagated to #grid directly so you can look up possible values in its documentation (gutter and columns arguments). If not specified, they fall back to these defaults: - gutter: 1em - columns: (1fr,) * n if you provided n content arguments, that means an array with the value 1fr repeated n times.\nA more complex example would therefore be:\n#toolbox.side-by-side(gutter: 3mm, columns: (1fr, 2fr, 1fr))[\n  #rect(width: 100%, stroke: none, fill: aqua)\n][\n  #rect(width: 100%, stroke: none, fill: teal)\n][\n  #rect(width: 100%, stroke: none, fill: eastern)\n]\n\n\n\nside-by-side-kwargs",
+    "crumbs": [
+      "Toolbox",
+      "Side by side"
+    ]
+  },
+  {
+    "objectID": "toolbox/progress.html",
+    "href": "toolbox/progress.html",
+    "title": "How much longer? 🥱",
+    "section": "",
+    "text": "How much longer? 🥱\nThere are a handful of features that let you display the progress of the presentation.\nThe most simple one is directly displaying the current slide number. Remember that each slide might produce an arbitrary amount of subslides, i.e. PDF pages, so we cannot rely on the builtin page counter. Instead, there is #toolbox.slide-number to see what the current slide number is.\nIf you want to put that into relation to how many slides there are in total, you can also display #toolbox.last-slide-number.\nNote that both these things are content, though, so you can only display them and not calculate with the numbers. A common calculation you might want do to is finding their ratio, i.e. current slide number divided by total number of slides. To that end, you can use the function toolbox.progress. You can pass a function to it that turns the current ratio into some content. You might utilise this to display a little progress bar, for example:\n#let my-progress = {\n  [#toolbox.slide-number / #toolbox.last-slide-number]\n\n  toolbox.progress-ratio(ratio =&gt; {\n    stack(\n      dir: ltr,\n      rect(stroke: blue, fill: blue, width: ratio       * 8cm),\n      rect(stroke: blue, fill: none, width: (1 - ratio) * 8cm),\n    )\n  })\n}\n\n#set align(horizon)\n\n#for _ in range(6) {\n  slide[\n    #my-progress\n  ]\n}\n\n\n\n\n\n\nprogress (subslide 1)\n\n\n\n\n\n\n\nprogress (subslide 2)\n\n\n\n\n\n\n\nprogress (subslide 3)\n\n\n\n\n\n\n\n\n\nprogress (subslide 4)\n\n\n\n\n\n\n\nprogress (subslide 5)\n\n\n\n\n\n\n\nprogress (subslide 6)",
+    "crumbs": [
+      "Toolbox",
+      "How much longer? 🥱"
+    ]
+  },
+  {
+    "objectID": "toolbox/full-width.html",
+    "href": "toolbox/full-width.html",
+    "title": "Full width block",
+    "section": "",
+    "text": "Full width block\nSometimes you want content that spans the whole physical width of your slide, disregarding the page margin. This can be achieved using some annoying calculatings involving page.margin which are luckily already done for you if you use #toolbox.full-width-block!\nNote that this only works when the left and right page margin are explicitly specified (i.e. both are neither none nor auto).\nThis can be very useful for headers and footers.\n#set page(\n  paper: \"presentation-16-9\",\n  margin: 2cm,\n  header: align(top,    toolbox.full-width-block(fill: aqua, inset: 8pt)[I'm up high]),\n  footer: align(bottom, toolbox.full-width-block(fill: lime, inset: 8pt)[I'm down low]),\n)\n\n#slide[\n  #lorem(10)\n]\n\n\n\nfull-width",
+    "crumbs": [
+      "Toolbox",
+      "Full width block"
+    ]
+  },
+  {
+    "objectID": "toolbox/next-heading.html",
+    "href": "toolbox/next-heading.html",
+    "title": "Find next heading",
+    "section": "",
+    "text": "Find next heading\nIt can be very convenient to specify something like slide titles using headings as they have a dedicated Typst syntax. While it might suffice to just style how a heading is displayed using a show rule, this is not feasible when the slide title is supposed to be part of the page header, for example.\nFor these situations, the toolbox provides #toolbox.next-heading. It takes a function mapping the body of the first heading on the same page (if it exists) to some content.\nThe intended use is as such:\n#set page(\n  paper: \"presentation-16-9\",\n  header: toolbox.next-heading(h =&gt; underline(h))\n)\n\n#show heading.where(level: 1): none\n\n#set align(horizon)\n\n#slide[\n  = My slide title\n\n  #lorem(10)\n]\n\n#slide[\n  slide without a title\n]\n\n#slide[\n  = Another title\n\n  #lorem(10)\n]\n\n\n\n\n\n\nnext-heading (subslide 1)\n\n\n\n\n\n\n\nnext-heading (subslide 2)\n\n\n\n\n\n\n\nnext-heading (subslide 3)\n\n\n\n\n\nNote the extra show rule for level-one headings making them invisible.\nYou can make #toolbox.next-heading look for headings of other levels as well, just specify the optional level argument that defaults to 1.",
+    "crumbs": [
+      "Toolbox",
+      "Find next heading"
+    ]
+  },
+  {
+    "objectID": "dynamic/dynamic.html",
+    "href": "dynamic/dynamic.html",
+    "title": "Dynamic slides",
+    "section": "",
+    "text": "Dynamic slides\nThe PDF format does not (trivially) allow to include animations, as one would be used to from, say, PowerPoint. The solution PDF-based presentation slides use is to create multiple PDF pages for one slide, each with slightly different content. This enables us to have some basic dynamic elements on our slides.\nIn this book, we will use the term logical slide for a section of content that was created by one call to #slide, and subslide for a resulting PDF page. Each logical side can have an arbitrary amount of subslides and every subslide is part of exactly one logical slide. Note that the same page number is displayed for all subslides of a logical slide.\nAs you will see soon, the commands for creating dynamic content all have some way of specifying on what subslides some content is supposed to be shown. One of those subslides has the highest index, of course. Of all those commands with their respective highest subslide to show something, the maximum is take again and that defines the number of PDF pages produced for one logical slide. For example, suppose we have a slide with the following commands: - show something on subslides 1 and 3 - show something from subslide 2 to subslide 4 - show something until subslide 6\nThis results in 6 PDF pages for this logical slide.\nIn the LaTeX beamer package, the functionalities described in this part are called “overlays”.",
     "crumbs": [
       "Dynamic slides",
-      "Helper functions",
-      "Higher level helper functions"
+      "Dynamic slides"
     ]
   },
   {
@@ -277,71 +361,70 @@
     ]
   },
   {
-    "objectID": "dynamic/dynamic.html",
-    "href": "dynamic/dynamic.html",
-    "title": "Dynamic slides",
+    "objectID": "dynamic/cover.html",
+    "href": "dynamic/cover.html",
+    "title": "Cover mode",
     "section": "",
-    "text": "Dynamic slides\nThe PDF format does not (trivially) allow to include animations, as one would be used to from, say, PowerPoint. The solution PDF-based presentation slides use is to create multiple PDF pages for one slide, each with slightly different content. This enables us to have some basic dynamic elements on our slides.\nIn this book, we will use the term logical slide for a section of content that was created by one call to #slide, and subslide for a resulting PDF page. Each logical side can have an arbitrary amount of subslides and every subslide is part of exactly one logical slide. Note that the same page number is displayed for all subslides of a logical slide.\nAs you will see soon, the commands for creating dynamic content all have some way of specifying on what subslides some content is supposed to be shown. One of those subslides has the highest index, of course. Of all those commands with their respective highest subslide to show something, the maximum is take again and that defines the number of PDF pages produced for one logical slide. For example, suppose we have a slide with the following commands: - show something on subslides 1 and 3 - show something from subslide 2 to subslide 4 - show something until subslide 6\nThis results in 6 PDF pages for this logical slide.\nIn the LaTeX beamer package, the functionalities described in this part are called “overlays”.",
+    "text": "Cover mode\nCovered content (using #uncover, #one-by-one, #item-by-item, or #show: later) is completely invisible, by default. You can decide to make it visible but less prominent using the optional mode argument to each of those functions. The mode argument takes two kinds of values: hide (the default) or any color. When using a color as the mode, text is printed in that color.\nUse it as follows:\n#uncover(3, mode: gray)[abc]\n\n#one-by-one(start: 2, mode: gray)[def ][ghi]\n\n#item-by-item(mode: gray)[\n  - jkl\n  - mno\n]\n\n#show: later.with(mode: gray)\npqr\nresulting in\n\n\n\n\n\n\ncover (subslide 1)\n\n\n\n\n\n\n\ncover (subslide 2)\n\n\n\n\n\n\n\ncover (subslide 3)\n\n\n\n\n\nWarning! The “color mode” really only wraps the covered content in a\n#text(fill: mode)[...]\nso it has only limited control over the actual display. Especially - text that defines its own color (e.g. syntax highlighting), - visualisations, - images\nwill not be affected by that. This makes the color mode only somewhat useful today. (Relevant GitHub issue)",
     "crumbs": [
       "Dynamic slides",
-      "Dynamic slides"
+      "Cover mode"
     ]
   },
   {
-    "objectID": "dynamic/reveal-code.html",
-    "href": "dynamic/reveal-code.html",
-    "title": "Succesively uncover code",
+    "objectID": "dynamic/later.html",
+    "href": "dynamic/later.html",
+    "title": "show: later to reveal content piece by piece",
     "section": "",
-    "text": "Since Typst has great builtin support for typesetting code, Polylux wants to provide a convenience feature for this as well. Namely, the function #reveal-code takes a code block and splits it into parts shown on different subslides.\nAs an example:\n#reveal-code(lines: (1, 3, 6, 7))[```rust\n  pub fn main() {\n    let x = vec![3, 4, 1];\n    let y = &x;\n    if let Some(a) = x.first() {\n      dbg!(a);\n    } else {\n      println!(\"x is empty.\");\n    }\n  }\n```]\n\n\n\n\n\n\nreveal-code (subslide 1)\n\n\n\n\n\n\n\nreveal-code (subslide 2)\n\n\n\n\n\n\n\nreveal-code (subslide 3)\n\n\n\n\n\n\n\n\n\nreveal-code (subslide 4)\n\n\n\n\n\n\n\nreveal-code (subslide 5)\n\n\n\n\n\nAs we can see, the code is revealed up to the first, third, sixth, and then seventh row on each new subslide. Every line that has already been previously revealed is shown in gray. Afterwards, the whole code is shown without alterations.\n\n\nYou can configure a couple of things about reveal-code:\n\n\nAs demonstrated above, this is the default behaviour. If you don’t want that, use the option full: false like so:\n#reveal-code(lines: (2, 4), full: false)[```\n  first line\n  second line\n  third line\n  fourth line\n  fifth line\n```]\n\n\n\nBy default, previously uncovered lines are shown in gray and not yet uncovered lines are hidden. This can be controlled using the before and after options. Like the cover mode for other functions, these accept either hide or any color. The default is thus before: gray and after: hide.\n\n\n\nSimilar to here, there is also a start option to specify the first subslide where code is revealed.",
+    "text": "Consider some code like the following:\n#uncover(\"1-\")[first]\n#uncover(\"2-\")[second]\n#uncover(\"3-\")[third]\nThe goal here is to uncover parts of the slide one by one, so that an increasing amount of content is shown, but we don’t want to specify all subslide indices manually, ideally.\nIf you have used the LaTeX beamer package before, you might be familiar with the \\pause command. It makes everything after it on that slide appear on the next subslide. Features of the kind “everything after this” are handled in Typst using the #show: feature. Namely, #show: some-function uses the following content as an argument to some-function. Polylux provides the later function that makes its argument appear on the next subslide. So, we can equivalently write the above code as:\nfirst\n#show: later\nsecond\n#show: later\nthird\nThis results in\n\n\n\n\n\n\nlater (subslide 1)\n\n\n\n\n\n\n\nlater (subslide 2)\n\n\n\n\n\n\n\nlater (subslide 3)\n\n\n\n\n\n#show: later should mainly be used when you want to distribute a lot of code onto different subslides. For smaller pieces of code, consider one of the functions described next.\n\n\nNote that, like every show-rule, #show: later only affects the rest of its surrounding scope. For other (potentially conceptually later) content in a different scope, you have to use a new #show: later rule. If you see weird interactions between different scopes using #show: later or you get a warning from Typst that layouting did not converge, you can make use of the optional argument strand (set to 1 by default):\n#[\n  this is scope 1\n  #show: later\n  still scope 1\n]\n#[\n  this is scope 2\n  #show: later.with(strand: 2)\n  still scope 2\n]\nEvery strand works independently of every other.",
     "crumbs": [
       "Dynamic slides",
       "Helper functions",
-      "Succesively uncover code"
+      "`show: later` to reveal content piece by piece"
     ]
   },
   {
-    "objectID": "dynamic/reveal-code.html#configuration",
-    "href": "dynamic/reveal-code.html#configuration",
-    "title": "Succesively uncover code",
+    "objectID": "dynamic/later.html#multiple-scopes",
+    "href": "dynamic/later.html#multiple-scopes",
+    "title": "show: later to reveal content piece by piece",
     "section": "",
-    "text": "You can configure a couple of things about reveal-code:\n\n\nAs demonstrated above, this is the default behaviour. If you don’t want that, use the option full: false like so:\n#reveal-code(lines: (2, 4), full: false)[```\n  first line\n  second line\n  third line\n  fourth line\n  fifth line\n```]\n\n\n\nBy default, previously uncovered lines are shown in gray and not yet uncovered lines are hidden. This can be controlled using the before and after options. Like the cover mode for other functions, these accept either hide or any color. The default is thus before: gray and after: hide.\n\n\n\nSimilar to here, there is also a start option to specify the first subslide where code is revealed.",
+    "text": "Note that, like every show-rule, #show: later only affects the rest of its surrounding scope. For other (potentially conceptually later) content in a different scope, you have to use a new #show: later rule. If you see weird interactions between different scopes using #show: later or you get a warning from Typst that layouting did not converge, you can make use of the optional argument strand (set to 1 by default):\n#[\n  this is scope 1\n  #show: later\n  still scope 1\n]\n#[\n  this is scope 2\n  #show: later.with(strand: 2)\n  still scope 2\n]\nEvery strand works independently of every other.",
     "crumbs": [
       "Dynamic slides",
       "Helper functions",
-      "Succesively uncover code"
+      "`show: later` to reveal content piece by piece"
     ]
   },
   {
-    "objectID": "dynamic/syntax.html",
-    "href": "dynamic/syntax.html",
-    "title": "General syntax for #only and #uncover",
+    "objectID": "dynamic/helper.html",
+    "href": "dynamic/helper.html",
+    "title": "Higher level helper functions",
     "section": "",
-    "text": "General syntax for #only and #uncover\nBoth functions are used in the same way. They each take two positional arguments, the first is a description of the subslides the content is supposed to be shown on, the second is the content itself. Note that Typst provides some syntactic sugar for trailing content arguments, namely putting the content block behind the function call.\nYou could therefore write:\n#slide[\n  before #only(2)[*displayed only on subslide 2*] after\n\n  before #uncover(2)[*uncovered only on subslide 2*] after\n]\n…resulting in\n\n\n\n\n\n\nonly-uncover (subslide 1)\n\n\n\n\n\n\n\nonly-uncover (subslide 2)\n\n\n\n\n\n(Note again that the gray border is not part of the slides and that the labels indicating the index of the subslide are also added afterwards.)\nYou can clearly see the difference in behaviour between only and uncover. In the first line, “after” moves but not in the second line.\nIn this example, we specified only a single subslide index, resulting in content that is shown on that exact subslide and at no other one. Let’s explore more complex rules next.",
+    "text": "Higher level helper functions\nWith #only and #uncover you can come a long way but there are some reoccurring situations for which helper functions are provided. We call them “higher level” because they use #only and #uncover under the hood and operate on larger pieces of content.\nFor the common case of succesively revealing content, there are #pause and #one-by-one and its friends. For substituting content, we have #alternatives in different variants. The following sections will describe these functions in detail.",
     "crumbs": [
       "Dynamic slides",
-      "General syntax for `#only` and `#uncover`"
+      "Helper functions",
+      "Higher level helper functions"
     ]
   },
   {
-    "objectID": "dynamic/handout.html",
-    "href": "dynamic/handout.html",
-    "title": "Handout mode",
+    "objectID": "faq/faq.html",
+    "href": "faq/faq.html",
+    "title": "Frequently Asked Questions",
     "section": "",
-    "text": "Handout mode\nIf you distribute your slides after your talk for further reference, you might not want to keep in all the dynamic content. Imagine using item-by-item on a long list and readers having to scroll through endless pages when they just want to see the full list.\nYou can use #enable-handout-mode(true) at the top of your code to achieve this:\nIt has the effect that all dynamic visibility of elements that reserve space is switched off. For example,\n#enable-handout-mode(true)\n// ...\n#slide[\n  Some text.\n  #uncover(\"3-\")[You cannot always see this.]\n  Or can you?\n  #show: later\n\n  And what about this?\n]\nbecomes:\n\n\n\nhandout\n\n\nNote that only and alternatives are not affected as there is no obvious way to unify their content to one slide.",
+    "text": "Yes. You can use the following show rules:\n#let no-par-spacing(it) = (\n  context {\n    set par(spacing: par.leading)\n    it\n  }\n)\n\n#show list: no-par-spacing\n#show enum: no-par-spacing\n\n#show hide: it =&gt; {\n  show list.item: list\n  show enum.item: enum\n\n  it\n}\nThis works by splitting up the list into multiple lists, each with one list item. This change hides the list marker properly, but also increases the spacing between individual list items (as the items are now individual lists). The first two show rules in the snippet above fix this by reducing the spacing between lists to be the same as the spacing between list items within one list.",
     "crumbs": [
-      "Dynamic slides",
-      "Handout mode"
+      "Frequently Asked Questions"
     ]
   },
   {
-    "objectID": "dynamic/complex.html",
-    "href": "dynamic/complex.html",
-    "title": "Complex display rules",
+    "objectID": "faq/faq.html#is-it-possible-to-also-hide-the-markers-of-hidden-list-items",
+    "href": "faq/faq.html#is-it-possible-to-also-hide-the-markers-of-hidden-list-items",
+    "title": "Frequently Asked Questions",
     "section": "",
-    "text": "Complex display rules\nThere are multiple options to define more complex display rules than a single number.\n\nArray\nThe simplest extension is to use an array. For example\n#slide[\n  #uncover((1, 2, 4))[uncovered only on subslides 1, 2, and 4]\n]\nresults in:\n\n\n\n\n\n\nrule-array (subslide 1)\n\n\n\n\n\n\n\nrule-array (subslide 2)\n\n\n\n\n\n\n\nrule-array (subslide 3)\n\n\n\n\n\n\n\n\n\nrule-array (subslide 4)\n\n\n\n\n\nThe array elements can actually themselves be any kind of rule that is explained on this page.\n\n\nInterval\nYou can also provide a (bounded or half-bounded) interval in the form of a dictionary with a beginning and/or an until key:\n#slide[\n  #only((beginning: 1, until: 5))[Content displayed on subslides 1, 2, 3, 4, and 5 \\ ]\n  #only((beginning: 2))[Content displayed on subslide 2 and every following one \\ ]\n  #only((until: 3))[Content displayed on subslides 1, 2, and 3 \\ ]\n  #only((:))[Content that is always displayed]\n]\nresults in:\n\n\n\n\n\n\nrule-interval (subslide 1)\n\n\n\n\n\n\n\nrule-interval (subslide 2)\n\n\n\n\n\n\n\nrule-interval (subslide 3)\n\n\n\n\n\n\n\n\n\nrule-interval (subslide 4)\n\n\n\n\n\n\n\nrule-interval (subslide 5)\n\n\n\n\n\nIn the last case, you would not need to use #only anyways, obviously.\n\n\nConvenient syntax as strings\nIn principle, you can specify every rule using numbers, arrays, and intervals. However, consider having to write\n#uncover(((until: 2), 4, (beginning: 6, until: 8), (beginning: 10)))[polylux]\nThat’s only fun the first time. Therefore, we provide a convenient alternative. You can equivalently write:\n#uncover(\"-2, 4, 6-8, 10-\")[Polylux]\nwhich results in:\n\n\n\n\n\n\nrule-string (subslide 1)\n\n\n\n\n\n\n\nrule-string (subslide 2)\n\n\n\n\n\n\n\nrule-string (subslide 3)\n\n\n\n\n\n\n\n\n\nrule-string (subslide 4)\n\n\n\n\n\n\n\nrule-string (subslide 5)\n\n\n\n\n\n\n\nrule-string (subslide 6)\n\n\n\n\n\n\n\n\n\nrule-string (subslide 7)\n\n\n\n\n\n\n\nrule-string (subslide 8)\n\n\n\n\n\n\n\nrule-string (subslide 9)\n\n\n\n\n\n\n\n\n\nrule-string (subslide 10)\n\n\n\n\n\nMuch better, right? The spaces are optional, so just use them if you find it more readable.\nUnless you are creating those function calls programmaticly, it is a good recommendation to use the single-number syntax (#only(1)[...]) if that suffices and the string syntax for any more complex use case.",
+    "text": "Yes. You can use the following show rules:\n#let no-par-spacing(it) = (\n  context {\n    set par(spacing: par.leading)\n    it\n  }\n)\n\n#show list: no-par-spacing\n#show enum: no-par-spacing\n\n#show hide: it =&gt; {\n  show list.item: list\n  show enum.item: enum\n\n  it\n}\nThis works by splitting up the list into multiple lists, each with one list item. This change hides the list marker properly, but also increases the spacing between individual list items (as the items are now individual lists). The first two show rules in the snippet above fix this by reducing the spacing between lists to be the same as the spacing between list items within one list.",
     "crumbs": [
-      "Dynamic slides",
-      "Complex display rules"
+      "Frequently Asked Questions"
     ]
   },
   {
@@ -375,79 +458,6 @@
     "crumbs": [
       "External tools",
       "pdfpc"
-    ]
-  },
-  {
-    "objectID": "faq/faq.html",
-    "href": "faq/faq.html",
-    "title": "Frequently Asked Questions",
-    "section": "",
-    "text": "Yes. You can use the following show rules:\n#let no-par-spacing(it) = (\n  context {\n    set par(spacing: par.leading)\n    it\n  }\n)\n\n#show list: no-par-spacing\n#show enum: no-par-spacing\n\n#show hide: it =&gt; {\n  show list.item: list\n  show enum.item: enum\n\n  it\n}\nThis works by splitting up the list into multiple lists, each with one list item. This change hides the list marker properly, but also increases the spacing between individual list items (as the items are now individual lists). The first two show rules in the snippet above fix this by reducing the spacing between lists to be the same as the spacing between list items within one list.",
-    "crumbs": [
-      "Frequently Asked Questions"
-    ]
-  },
-  {
-    "objectID": "faq/faq.html#is-it-possible-to-also-hide-the-markers-of-hidden-list-items",
-    "href": "faq/faq.html#is-it-possible-to-also-hide-the-markers-of-hidden-list-items",
-    "title": "Frequently Asked Questions",
-    "section": "",
-    "text": "Yes. You can use the following show rules:\n#let no-par-spacing(it) = (\n  context {\n    set par(spacing: par.leading)\n    it\n  }\n)\n\n#show list: no-par-spacing\n#show enum: no-par-spacing\n\n#show hide: it =&gt; {\n  show list.item: list\n  show enum.item: enum\n\n  it\n}\nThis works by splitting up the list into multiple lists, each with one list item. This change hides the list marker properly, but also increases the spacing between individual list items (as the items are now individual lists). The first two show rules in the snippet above fix this by reducing the spacing between lists to be the same as the spacing between list items within one list.",
-    "crumbs": [
-      "Frequently Asked Questions"
-    ]
-  },
-  {
-    "objectID": "getting-started/getting-started.html",
-    "href": "getting-started/getting-started.html",
-    "title": "Getting started",
-    "section": "",
-    "text": "You can find this package in the official Typst package repository. To use it, start your document with\n#import \"@preview/polylux:0.4.0\": *\nYou now have two options: 1. Start from one of the templates. If you want just a minimal scaffold to get you started, try out the basic template by running typst init @preview/basic-polylux:0.1.0 your-cool-project. 2. Start from scratch.\nWe will choose the second option for this tutorial. Let’s start with the absolute minimal effort. What characterises a set of slides? Well, each slide (or PDF page, as we already established) has specific dimensions. Some time ago, a 4:3 format was common, nowadays 16:9 is used more often. Typst has those built in:\n#set page(paper: \"presentation-16-9\")\nYou probably don’t want your audience to carry magnifying glasses, so let’s set the font size to something readable from the last row:\n#set text(size: 25pt)\nWe should be ready do go to create some actual slides now. We will use the function slide for this, which is kind of at the core of this package.\n// Remember to actually import Polylux before this!\n#slide[\n  Hello, world!\n]\nAnd here is the result (the gray border is not part of the output but it makes the slide easier to see here):\n\n\n\nhelloworld\n\n\nAlready kinda looks like a slide, but also a bit boring, maybe. We should add a title slide before that so that our audience actually knows what talk they are attending. Also, let us choose a nicer font and maybe add some colour? We modify the #set page and #set text commands for that:\n#set page(paper: \"presentation-16-9\", fill: teal.lighten(90%))\n#set text(size: 25pt, font: \"Lato\")\n\n#slide[\n  #set align(horizon)\n  = My fabulous talk\n\n  Jane Doe\n\n  Conference on Advances in Slide Making\n]\n\n#slide[\n  Hello, world!\n]\n\n\n\n\n\n\ntitleslide (subslide 1)\n\n\n\n\n\n\n\ntitleslide (subslide 2)\n\n\n\n\n\nNot bad, right? Another thing that is usually a good idea is to have a title on each slide. That is also no big deal by using off-the-shelf Typst features, so let’s modify our first slide:\n#slide[\n  == My slide title\n  Hello, world!\n]\nThis is starting to look like a real presentation:\n\n\n\n\n\n\nslidetitle (subslide 1)\n\n\n\n\n\n\n\nslidetitle (subslide 2)\n\n\n\n\n\n\n\nTo be honest, everything we did so far would have been just as easy without using Polylux at all. So why should you care about it?\nConsider the following situation: You have a slide where parts of the content appear or disappear, or the colour of some text changes, or some other small-sized change. Would you like to duplicate the whole slide just so to create this affect? And then maintain multiple copies of the same content, making sure never to forget updating all copies when your content evolves? Of course you wouldn’t and, gladly, Polylux can handle this for you.\nThis kind of feature is called dynamic content or overlays (loosely speaking, you might also say animations but that might be a bit of a stretch, nothing actually “moves” on PDF pages).\nSo how does that work in Polylux? As a quick example, let’s add a little quiz to our slides:\n#slide[\n  == A quiz\n\n  What is the capital of the Republic of Benin?\n\n  #show: later\n  Porto-Novo\n]\n\n\n\n\n\n\nquiz (subslide 1)\n\n\n\n\n\n\n\nquiz (subslide 2)\n\n\n\n\n\n\n\nquiz (subslide 3)\n\n\n\n\n\n\n\n\n\nquiz (subslide 4)\n\n\n\n\n\nNote how two more slides have been created even though we declared only one.\nThe next sections will explain dynamic content in Polylux in all its details.\nFor reference, here is the full source code for the slides we developed in this section:\n#import \"@preview/polylux:0.4.0\": *\n\n#set page(paper: \"presentation-16-9\", fill: teal.lighten(90%))\n#set text(size: 25pt, font: \"Lato\")\n\n#slide[\n  #set align(horizon)\n  = My fabulous talk\n\n  Jane Doe\n\n  Conference on Advances in Slide Making\n]\n\n#slide[\n  == My slide title\n  Hello, world!\n]\n\n#slide[\n  == A quiz\n\n  What is the capital of the Republic of Benin?\n\n  #show: later\n  Porto-Novo\n]",
-    "crumbs": [
-      "Getting started"
-    ]
-  },
-  {
-    "objectID": "getting-started/getting-started.html#so-what",
-    "href": "getting-started/getting-started.html#so-what",
-    "title": "Getting started",
-    "section": "",
-    "text": "To be honest, everything we did so far would have been just as easy without using Polylux at all. So why should you care about it?\nConsider the following situation: You have a slide where parts of the content appear or disappear, or the colour of some text changes, or some other small-sized change. Would you like to duplicate the whole slide just so to create this affect? And then maintain multiple copies of the same content, making sure never to forget updating all copies when your content evolves? Of course you wouldn’t and, gladly, Polylux can handle this for you.\nThis kind of feature is called dynamic content or overlays (loosely speaking, you might also say animations but that might be a bit of a stretch, nothing actually “moves” on PDF pages).\nSo how does that work in Polylux? As a quick example, let’s add a little quiz to our slides:\n#slide[\n  == A quiz\n\n  What is the capital of the Republic of Benin?\n\n  #show: later\n  Porto-Novo\n]\n\n\n\n\n\n\nquiz (subslide 1)\n\n\n\n\n\n\n\nquiz (subslide 2)\n\n\n\n\n\n\n\nquiz (subslide 3)\n\n\n\n\n\n\n\n\n\nquiz (subslide 4)\n\n\n\n\n\nNote how two more slides have been created even though we declared only one.\nThe next sections will explain dynamic content in Polylux in all its details.\nFor reference, here is the full source code for the slides we developed in this section:\n#import \"@preview/polylux:0.4.0\": *\n\n#set page(paper: \"presentation-16-9\", fill: teal.lighten(90%))\n#set text(size: 25pt, font: \"Lato\")\n\n#slide[\n  #set align(horizon)\n  = My fabulous talk\n\n  Jane Doe\n\n  Conference on Advances in Slide Making\n]\n\n#slide[\n  == My slide title\n  Hello, world!\n]\n\n#slide[\n  == A quiz\n\n  What is the capital of the Republic of Benin?\n\n  #show: later\n  Porto-Novo\n]",
-    "crumbs": [
-      "Getting started"
-    ]
-  },
-  {
-    "objectID": "toolbox/toolbox.html",
-    "href": "toolbox/toolbox.html",
-    "title": "Toolbox",
-    "section": "",
-    "text": "Toolbox\nPolylux exports a module called toolbox that provides some common building blocks for designing your slides.",
-    "crumbs": [
-      "Toolbox",
-      "Toolbox"
-    ]
-  },
-  {
-    "objectID": "toolbox/sections.html",
-    "href": "toolbox/sections.html",
-    "title": "Sections",
-    "section": "",
-    "text": "Sections\nAnother way of expressing where we are in a presentation is working with sections.\nIn your presentation, you can incorporate the following features from the toolbox module:\nFirst, whenever you want to start a new section, you can call\n#toolbox.register-section(the-section-name)\nwith whatever name you want.\nBased on that, you can then display what section the presenter is currently in by using:\n#toolbox.current-section\nIf no section has been registered so far, this is empty content ([]).\nAnd finally, you might want to display some kind of overview over all the sections. This is achieved by:\n#toolbox.all-sections((sections, current) =&gt; [some content])\nall-sections takes a function with two arguments and uses that to produce some content based on all sections in the presentation and the current one.\nFor example:\n#let sections-band = toolbox.all-sections( (sections, current) =&gt; {\n  set text(fill: gray, size: .8em)\n  sections\n    .map(s =&gt; if s == current { strong(s) } else { s })\n    .join([ • ])\n})\n\n#set page(footer: sections-band)\n\n#slide[\n  #toolbox.register-section[The beginning]\n\n  #lorem(5)\n]\n\n#slide[\n  #lorem(3)\n]\n\n#slide[\n  #toolbox.register-section[The middle]\n\n  #lorem(6)\n]\n\n#slide[\n  #toolbox.register-section[The end]\n\n  #lorem(4)\n]\n\n\n\n\n\n\nsections-band (subslide 1)\n\n\n\n\n\n\n\nsections-band (subslide 2)\n\n\n\n\n\n\n\nsections-band (subslide 3)\n\n\n\n\n\n\n\n\n\nsections-band (subslide 4)\n\n\n\n\n\nAnother example, producing a table of contents and title slides for each new section:\n#let my-new-section(name) = slide[\n  #set align(horizon)\n  #set text(size: 2em)\n  #toolbox.register-section(name)\n\n  #strong(name)\n]\n\n#slide[\n  #toolbox.all-sections((sections, current) =&gt; {\n    enum(..sections)\n  })\n]\n\n#my-new-section[The beginning]\n\n#slide[\n  We are currently in Section \"#toolbox.current-section\" and I like it so far.\n]\n\n#slide[\n  Still in the same section.\n]\n\n#my-new-section[The middle]\n\n#slide[\n  Oh, new section. What comes after \"#toolbox.current-section\"?\n]\n\n#my-new-section[The end]\n\n#slide[\n  You might have guessed this, to be honest.\n]\n\n\n\n\n\n\nsections (subslide 1)\n\n\n\n\n\n\n\nsections (subslide 2)\n\n\n\n\n\n\n\nsections (subslide 3)\n\n\n\n\n\n\n\n\n\nsections (subslide 4)\n\n\n\n\n\n\n\nsections (subslide 5)\n\n\n\n\n\n\n\nsections (subslide 6)\n\n\n\n\n\n\n\n\n\nsections (subslide 7)\n\n\n\n\n\n\n\nsections (subslide 8)",
-    "crumbs": [
-      "Toolbox",
-      "Sections"
-    ]
-  },
-  {
-    "objectID": "toolbox/full-width.html",
-    "href": "toolbox/full-width.html",
-    "title": "Full width block",
-    "section": "",
-    "text": "Full width block\nSometimes you want content that spans the whole physical width of your slide, disregarding the page margin. This can be achieved using some annoying calculatings involving page.margin which are luckily already done for you if you use #toolbox.full-width-block!\nNote that this only works when the left and right page margin are explicitly specified (i.e. both are neither none nor auto).\nThis can be very useful for headers and footers.\n#set page(\n  paper: \"presentation-16-9\",\n  margin: 2cm,\n  header: align(top,    toolbox.full-width-block(fill: aqua, inset: 8pt)[I'm up high]),\n  footer: align(bottom, toolbox.full-width-block(fill: lime, inset: 8pt)[I'm down low]),\n)\n\n#slide[\n  #lorem(10)\n]\n\n\n\nfull-width",
-    "crumbs": [
-      "Toolbox",
-      "Full width block"
     ]
   }
 ]
