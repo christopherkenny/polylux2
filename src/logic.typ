@@ -155,7 +155,7 @@
   }
 }
 
-#let alternatives-match(subslides-contents, position: bottom + left) = {
+#let alternatives-match(subslides-contents, position: bottom + left, block-mode: false) = {
   let subslides-contents = if type(subslides-contents) == dictionary {
     subslides-contents.pairs()
   } else {
@@ -164,16 +164,31 @@
 
   let subslides = subslides-contents.map(it => it.first())
   let contents = subslides-contents.map(it => it.last())
-  context{
-    let sizes = contents.map(c => measure(c))
-    let max-width = calc.max(..sizes.map(sz => sz.width))
-    let max-height = calc.max(..sizes.map(sz => sz.height))
-    for (subslides, content) in subslides-contents {
-      only(subslides, box(
-        width: max-width,
-        height: max-height,
-        align(position, content)
-      ))
+  if block-mode {
+    context layout(size => {
+      // Determine how much height each content will take when given full width
+      let sizes = contents.map(c => measure(block(width: size.width, c)))
+      let max-height = calc.max(..sizes.map(sz => sz.height))
+      for (subslides, content) in subslides-contents {
+        only(subslides, block(
+          width: size.width,
+          height: max-height,
+          align(position, content)
+        ))
+      }
+    })
+  } else {
+    context {
+      let sizes = contents.map(c => measure(c))
+      let max-width = calc.max(..sizes.map(sz => sz.width))
+      let max-height = calc.max(..sizes.map(sz => sz.height))
+      for (subslides, content) in subslides-contents {
+        only(subslides, box(
+          width: max-width,
+          height: max-height,
+          align(position, content)
+        ))
+      }
     }
   }
 }
