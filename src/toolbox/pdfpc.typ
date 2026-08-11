@@ -1,3 +1,52 @@
+#let pdfpc-file = context {
+  let arr = query(<pdfpc>).map(it => it.value)
+  let (config, ..slides) = arr.split((t: "NewSlide"))
+  let pdfpc = (
+    pdfpcFormat: 2,
+    disableMarkdown: false,
+  )
+  for item in config {
+    pdfpc.insert(lower(item.t.at(0)) + item.t.slice(1), item.v)
+  }
+  let pages = ()
+  for slide in slides {
+    let page = (
+      idx: 0,
+      label: 1,
+      overlay: 0,
+      forcedOverlay: false,
+      hidden: false,
+    )
+    for item in slide {
+      if item.t == "Idx" {
+        page.idx = item.v
+      } else if item.t == "LogicalSlide" {
+        page.label = item.v
+      } else if item.t == "Overlay" {
+        page.overlay = item.v
+        page.forcedOverlay = item.v > 0
+      } else if item.t == "HiddenSlide" {
+        page.hidden = true
+      } else if item.t == "SaveSlide" {
+        if "savedSlide" not in pdfpc {
+          pdfpc.savedSlide = page.label - 1
+        }
+      } else if item.t == "EndSlide" {
+        if "endSlide" not in pdfpc {
+          pdfpc.endSlide = page.label - 1
+        }
+      } else if item.t == "Note" {
+        page.note = item.v
+      } else {
+        pdfpc.insert(lower(item.t.at(0)) + item.t.slice(1), item.v)
+      }
+    }
+    pages.push(page)
+  }
+  pdfpc.insert("pages", pages)
+  [#metadata(pdfpc)<pdfpc-file>]
+}
+
 #let speaker-note(text) = {
   let text = if type(text) == str {
     text
@@ -91,4 +140,7 @@
 
     [ #metadata((t: "DefaultTransition", v: transition-str)) <pdfpc> ]
   }
+
+  // add a <pdfpc-file> metadata to generate a json-based pdfpc file directly
+  pdfpc-file
 }
