@@ -20,6 +20,17 @@ Polylux gives you:
 
 If you like it, consider [giving a star on GitHub](https://github.com/andreasKroepelin/polylux)!
 
+## About polylux2
+
+This site documents **polylux2**, a fork of the original
+[Polylux](https://github.com/andreasKroepelin/polylux) package maintained by
+[Christopher Kenny](https://github.com/christopherkenny) at
+[christopherkenny/polylux2](https://github.com/christopherkenny/polylux2).
+All credit for the original design and implementation goes to Andreas
+Kröpelin and the Polylux contributors; see [Contributing](#contributing) and
+[License](#license) below for details on how this fork relates to the
+upstream project.
+
 ## Why the name?
 
 A [*polylux*](https://en.wikipedia.org/wiki/Polylux_(overhead_projector)) is
@@ -42,10 +53,18 @@ here.
 ## Contributing
 
 This package is free and open source.
-You can find the code on [GitHub](https://github.com/andreasKroepelin/polylux)
-where you can also create issues or pull requests.
+**polylux2** is a fork of the original
+[Polylux](https://github.com/andreasKroepelin/polylux) package, maintained at
+[christopherkenny/polylux2](https://github.com/christopherkenny/polylux2).
+You can find the code there, where you can also create issues or pull
+requests for this fork.
+For the original, upstream project, see
+[andreasKroepelin/polylux](https://github.com/andreasKroepelin/polylux).
 
 ## License
 
 Polylux is released under the
-[MIT license](https://github.com/andreasKroepelin/polylux/blob/main/LICENSE).
+[MIT license](https://github.com/christopherkenny/polylux2/blob/main/LICENSE).
+polylux2 is a fork maintained by [Christopher Kenny](https://github.com/christopherkenny);
+see the [LICENSE](https://github.com/christopherkenny/polylux2/blob/main/LICENSE)
+file for full copyright details.

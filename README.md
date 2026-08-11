@@ -76,6 +76,14 @@ where you can see the features of this template in action.
 **⚠ This package is under active development and there are no backwards
 compatibility guarantees!**
 
+## polylux2
+
+This repository, **polylux2**, is a fork of the original
+[Polylux](https://github.com/andreasKroepelin/polylux) package, maintained by
+[Christopher Kenny](https://github.com/christopherkenny). Please file issues
+and pull requests for this fork here rather than upstream. See
+[LICENSE](LICENSE) for copyright details.
+
 ## Acknowledgements
 Various people have contributed to this package and I will certainly forget
 someone here, but amongst others I would like to thank
