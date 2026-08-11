@@ -1,0 +1,138 @@
+# Sections
+
+Another way of expressing where we are in a presentation is working with sections.
+
+In your presentation, you can incorporate the following features from the
+`toolbox` module:
+
+First, whenever you want to start a new section, you can call
+
+```typ
+#toolbox.register-section(the-section-name)
+```
+
+with whatever name you want.
+
+Based on that, you can then display what section the presenter is currently in
+by using:
+
+```typ
+#toolbox.current-section
+```
+
+If no section has been registered so far, this is empty content (`[]`).
+
+And finally, you might want to display some kind of overview over all the
+sections.
+This is achieved by:
+
+```typ
+#toolbox.all-sections((sections, current) => [some content])
+```
+
+`all-sections` takes a function with two arguments and uses that to produce
+some content based on all sections in the presentation and the current one.
+
+For example:
+
+```typ
+#let sections-band = toolbox.all-sections( (sections, current) => {
+  set text(fill: gray, size: .8em)
+  sections
+    .map(s => if s == current { strong(s) } else { s })
+    .join([ • ])
+})
+
+#set page(footer: sections-band)
+
+#slide[
+  #toolbox.register-section[The beginning]
+
+  #lorem(5)
+]
+
+#slide[
+  #lorem(3)
+]
+
+#slide[
+  #toolbox.register-section[The middle]
+
+  #lorem(6)
+]
+
+#slide[
+  #toolbox.register-section[The end]
+
+  #lorem(4)
+]
+```
+
+::: {layout-ncol=3}
+![sections-band (subslide 1)](sections-band-1.png)
+
+![sections-band (subslide 2)](sections-band-2.png)
+
+![sections-band (subslide 3)](sections-band-3.png)
+
+![sections-band (subslide 4)](sections-band-4.png)
+:::
+
+Another example, producing a table of contents and title slides for each new
+section:
+
+```typ
+#let my-new-section(name) = slide[
+  #set align(horizon)
+  #set text(size: 2em)
+  #toolbox.register-section(name)
+
+  #strong(name)
+]
+
+#slide[
+  #toolbox.all-sections((sections, current) => {
+    enum(..sections)
+  })
+]
+
+#my-new-section[The beginning]
+
+#slide[
+  We are currently in Section "#toolbox.current-section" and I like it so far.
+]
+
+#slide[
+  Still in the same section.
+]
+
+#my-new-section[The middle]
+
+#slide[
+  Oh, new section. What comes after "#toolbox.current-section"?
+]
+
+#my-new-section[The end]
+
+#slide[
+  You might have guessed this, to be honest.
+]
+```
+
+::: {layout-ncol=3}
+![sections (subslide 1)](sections-1.png)
+
+![sections (subslide 2)](sections-2.png)
+
+![sections (subslide 3)](sections-3.png)
+
+![sections (subslide 4)](sections-4.png)
+
+![sections (subslide 5)](sections-5.png)
+
+![sections (subslide 6)](sections-6.png)
+
+![sections (subslide 7)](sections-7.png)
+
+![sections (subslide 8)](sections-8.png)
+:::

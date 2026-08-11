@@ -1,0 +1,49 @@
+project:
+  type: website
+  output-dir: _site
+  pre-render: generate-previews.R
+
+website:
+  title: "Polylux"
+  site-url: https://christopherkenny.github.io/polylux2/
+  page-navigation: true
+  sidebar:
+    style: floating
+    contents:
+      - index.qmd
+      - getting-started/getting-started.qmd
+      - section: "Dynamic slides"
+        contents:
+          - dynamic/dynamic.qmd
+          - dynamic/reserve.qmd
+          - dynamic/syntax.qmd
+          - dynamic/complex.qmd
+          - section: "Helper functions"
+            contents:
+              - dynamic/helper.qmd
+              - dynamic/later.qmd
+              - dynamic/obo-lbl.qmd
+              - dynamic/alternatives.qmd
+              - dynamic/reveal-code.qmd
+          - dynamic/cover.qmd
+          - dynamic/handout.qmd
+      - section: "Toolbox"
+        contents:
+          - toolbox/toolbox.qmd
+          - toolbox/side-by-side.qmd
+          - toolbox/progress.qmd
+          - toolbox/sections.qmd
+          - toolbox/next-heading.qmd
+          - toolbox/big.qmd
+          - toolbox/full-width.qmd
+      - faq/faq.qmd
+      - section: "External tools"
+        contents:
+          - external/external.qmd
+          - external/pdfpc.qmd
+      - changelog.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true

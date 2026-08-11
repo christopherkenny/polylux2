@@ -1,0 +1,108 @@
+# Complex display rules
+
+There are multiple options to define more complex display rules than a single
+number.
+
+### Array
+
+The simplest extension is to use an array.
+For example
+
+```typ
+#slide[
+  #uncover((1, 2, 4))[uncovered only on subslides 1, 2, and 4]
+]
+```
+
+results in:
+
+::: {layout-ncol=3}
+![rule-array (subslide 1)](rule-array-1.png)
+
+![rule-array (subslide 2)](rule-array-2.png)
+
+![rule-array (subslide 3)](rule-array-3.png)
+
+![rule-array (subslide 4)](rule-array-4.png)
+:::
+
+The array elements can actually themselves be any kind of rule that is explained
+on this page.
+
+### Interval
+
+You can also provide a (bounded or half-bounded) interval in the form of a
+dictionary with a `beginning` and/or an `until` key:
+
+```typ
+#slide[
+  #only((beginning: 1, until: 5))[Content displayed on subslides 1, 2, 3, 4, and 5 \ ]
+  #only((beginning: 2))[Content displayed on subslide 2 and every following one \ ]
+  #only((until: 3))[Content displayed on subslides 1, 2, and 3 \ ]
+  #only((:))[Content that is always displayed]
+]
+```
+
+results in:
+
+::: {layout-ncol=3}
+![rule-interval (subslide 1)](rule-interval-1.png)
+
+![rule-interval (subslide 2)](rule-interval-2.png)
+
+![rule-interval (subslide 3)](rule-interval-3.png)
+
+![rule-interval (subslide 4)](rule-interval-4.png)
+
+![rule-interval (subslide 5)](rule-interval-5.png)
+:::
+
+In the last case, you would not need to use `#only` anyways, obviously.
+
+### Convenient syntax as strings
+
+In principle, you can specify every rule using numbers, arrays, and intervals.
+However, consider having to write
+
+```typ
+#uncover(((until: 2), 4, (beginning: 6, until: 8), (beginning: 10)))[polylux]
+```
+
+That's only fun the first time.
+Therefore, we provide a convenient alternative.
+You can equivalently write:
+
+```typ
+#uncover("-2, 4, 6-8, 10-")[Polylux]
+```
+
+which results in:
+
+::: {layout-ncol=3}
+![rule-string (subslide 1)](rule-string-1.png)
+
+![rule-string (subslide 2)](rule-string-2.png)
+
+![rule-string (subslide 3)](rule-string-3.png)
+
+![rule-string (subslide 4)](rule-string-4.png)
+
+![rule-string (subslide 5)](rule-string-5.png)
+
+![rule-string (subslide 6)](rule-string-6.png)
+
+![rule-string (subslide 7)](rule-string-7.png)
+
+![rule-string (subslide 8)](rule-string-8.png)
+
+![rule-string (subslide 9)](rule-string-9.png)
+
+![rule-string (subslide 10)](rule-string-10.png)
+:::
+
+Much better, right?
+The spaces are optional, so just use them if you find it more readable.
+
+Unless you are creating those function calls programmaticly, it is a good
+recommendation to use the single-number syntax (`#only(1)[...]`) if that
+suffices and the string syntax for any more complex use case.

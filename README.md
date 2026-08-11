@@ -2,13 +2,13 @@
 
 # Polylux
 This is a package for creating presentation slides in [Typst](https://typst.app/).
-Read the [book](https://polylux.dev/book) to learn all
-about it and click [here](https://polylux.dev/book/changelog.html)
+Read the [docs](https://christopherkenny.github.io/polylux2/) to learn all
+about it and click [here](https://christopherkenny.github.io/polylux2/changelog.html)
 to see what's new!
 
 If you like it, consider [giving a star on GitHub](https://github.com/andreasKroepelin/polylux)!
 
-[![Book badge](https://img.shields.io/badge/docs-book-green)](https://polylux.dev/book)
+[![Docs badge](https://img.shields.io/badge/docs-quarto-green)](https://christopherkenny.github.io/polylux2/)
 ![GitHub](https://img.shields.io/github/license/andreasKroepelin/polylux)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/andreasKroepelin/polylux)
 ![GitHub Repo stars](https://img.shields.io/github/stars/andreasKroepelin/polylux)
@@ -61,14 +61,14 @@ The simplest one of them is called
 It is still very unintrusive but gives you some sensible defaults.
 
 For dynamic content, Polylux also provides [a convenient API for complex
-overlays](https://polylux.dev/book/dynamic/dynamic.html).
+overlays](https://christopherkenny.github.io/polylux2/dynamic/dynamic.html).
 
 If you use [pdfpc](https://pdfpc.github.io/) to display your slides, you can
-rely on [Polylux' support for it](https://polylux.dev/book/external/pdfpc.html)
+rely on [Polylux' support for it](https://christopherkenny.github.io/polylux2/external/pdfpc.html)
 and create speaker notes, hide slides, configure the timer and more!
 
 Visit the
-[book](https://polylux.dev/book)
+[docs](https://christopherkenny.github.io/polylux2/)
 for more details or take a look at the
 [demo PDF](https://github.com/andreasKroepelin/polylux/releases/latest/download/demo.pdf)
 where you can see the features of this template in action.
